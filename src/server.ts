@@ -1,7 +1,8 @@
 import fastify from 'fastify'
 import { knex } from './database'
+import { env } from './env'
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3333
+const port = env.PORT
 
 const app = fastify()
 
