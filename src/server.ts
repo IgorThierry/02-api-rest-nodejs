@@ -1,15 +1,26 @@
 import fastify from 'fastify'
-import { knex } from './database'
+
 import { env } from './env'
+import { transactionsRoutes } from './routes/transactions'
+import { ZodError } from 'zod'
 
 const port = env.PORT
 
 const app = fastify()
 
-app.get('/', async () => {
-  const transactions = await knex('transactions').select('*')
+app.register(transactionsRoutes, { prefix: '/transactions' })
 
-  return { transactions }
+app.setErrorHandler((error, request, reply) => {
+  if (error instanceof ZodError) {
+    const validationMessages = error.errors.map(
+      (validationError) => validationError.message,
+    )
+    reply
+      .code(400)
+      .send({ message: 'Validation Error', details: validationMessages })
+  } else {
+    reply.status(500).send({ message: 'Internal server error' })
+  }
 })
 
 app.listen({ port }).then(() => {
