@@ -9,7 +9,7 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "build": "tsup src --out-dir build",
-    "test": "vitest"
+    "test": "vitest ./src/**"
   },
   "keywords": [],
   "author": "",
